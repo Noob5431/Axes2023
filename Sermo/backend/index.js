@@ -60,7 +60,8 @@ app.get("/", (req, resp) => {
 });
  
 app.post("/register", async (req, resp) => {
-    let image_path = req.body;
+    //let image_path = req.body;
+    let image_path = "car.jpg";
     let body = new FormData();
     body.append("upload", fs.createReadStream(image_path));
     let json;
