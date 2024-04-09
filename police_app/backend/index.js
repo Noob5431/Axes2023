@@ -11,7 +11,6 @@ const sharp = require('sharp');
 
 main().catch((err) => console.log(err));
 
-
 async function main() {
     mongoose.connect('mongodb://localhost:27017/', {
         dbName: 'Cars',
@@ -93,7 +92,7 @@ app.post("/register",upload.single('image'), async (req, resp) => {
     console.log(json);
     if(json.results == undefined ||json.results.length == 0 ||json.results[0].score == undefined|| json.results[0].score < 0.8)
     {
-        resp.send("2");
+        resp.send({status:"2"});
         return;
     }
     let plate_name = json.results[0].plate;
@@ -101,11 +100,11 @@ app.post("/register",upload.single('image'), async (req, resp) => {
     if(car && car[0])
     {
         allowed = await CarType.find({cartype:car[0].carType}).exec();
-        resp.send(allowed[0].allowed);
+        resp.send({status:allowed[0].allowed, plate:plate_name});
     }
     else
     {
-        resp.send("2");
+        resp.send({status:"2"});
     }
 });
 app.listen(5000);

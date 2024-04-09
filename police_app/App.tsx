@@ -11,6 +11,7 @@ import axios from "axios";
 // const _startCamera= async () => {
 
 const App = () => {
+  const [text, setText] = useState("");
   const cameraRef = useRef<Camera>(null);
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -22,9 +23,12 @@ const App = () => {
   const handleSheetChanges = useCallback((index: number) => {
     //console.log('handleSheetChanges', index);
   }, []);
-
+  var myInterval = setInterval(everyTime, 3000);
+  function everyTime() {
+    takePicture();
+  }
   const takePicture = async () => {
-    console.log(cameraRef.current);
+    //console.log(cameraRef.current);
     if (cameraRef.current) {
       // console.log("takePicture");
       const photo = await cameraRef.current.takePictureAsync();
@@ -52,9 +56,13 @@ const App = () => {
         },
       });
       response = await response.json();
-      console.warn(response);
+      if (response["status"] != 2) {
+        setText(text + response["plate"] + "\n");
+        console.log(text);
+      }
     }
   };
+
   // const handleOnSubmit = async (e) => {
   //       e.preventDefault();
   //       let result = await fetch(
@@ -89,8 +97,7 @@ const App = () => {
             onChange={handleSheetChanges}
           >
             <View style={styles.text}>
-              <Text>Awesome🎉</Text>
-              <Button onPress={takePicture} title="suck" />
+              <Text>{text}</Text>
             </View>
           </BottomSheet>
         </View>
@@ -118,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f6f6f6",
   },
   text: {
-    color: "black",
+    color: "red",
     alignItems: "center",
     justifyContent: "center",
   },
